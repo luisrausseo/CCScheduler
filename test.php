@@ -28,7 +28,8 @@
 		$end_coacher = $input[3];
 		
 		//Get calendar from Outlook
-		$calendar = file('https://outlook.office365.com/owa/calendar/dc92047ea5f0434090c72c71faba36a7@ttu.edu/f82ae5de65ad4eac8980f13a52ef3ad813166233208521242222/S-1-8-1725553732-2989425400-3086551728-1998317349/reachcalendar.ics')
+		$cal_file = file("calendar.txt");
+		$calendar = file($cal_file[0])
 					or die("Calendar unavailable!");
 		
 		//Calculate time range for coaching session_cache_expire
