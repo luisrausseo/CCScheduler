@@ -77,4 +77,4 @@ if (max($start_1, $start_2) < min($end_1, $end_2)) {
 }
 ```
 
-![picture alt](/img/MatchingAlgorithm.PNG "Time Match Algorithm")
+![picture alt](/img/MatchAlgorithm.PNG "Time Match Algorithm")
