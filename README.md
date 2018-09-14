@@ -3,7 +3,9 @@ This web application finds the first match in which the person who needs coachin
 
 The application retrieves workers' schedule from a Google Calendar which feeds from When2Work. After finding the best match, then the app pulls data from an Office 365 room calendar to see if the resource is free to schedule the coaching session.
 
-## Google Calendar API
+##Development
+
+### Google Calendar API
 
 This application uses the [Google API Client Library for PHP](https://developers.google.com/api-client-library/php/) (google-api-php-client-2.2.2). 
 
@@ -40,7 +42,7 @@ Additionally the calendar must be shared to the Google Service Account.
 
 ![picture alt](/img/GoogleCalendarSharing.PNG "Google Calendar Sharing Settings")
 
-## Office 365 Room Calendar
+### Office 365 Room Calendar
 
 The room calendar is retrieved by opening a share-link provided and parsing trough the .ics file. 
 
@@ -65,7 +67,7 @@ foreach ($calendar as $line_num => $line) {
 }
 ```
 
-## Matching Algorithm
+### Matching Algorithm
 
 To match and worker to a Quality agent, or to find a time in which the room is available for both agents, the following criteria was used to define overlapping time frames:
 
@@ -79,7 +81,7 @@ if (max($start_1, $start_2) < min($end_1, $end_2)) {
 
 ![picture alt](/img/MatchAlgorithm.PNG "Time Match Algorithm")
 
-# Microsoft PowerShell
+### Microsoft PowerShell
 
 To keep the application updated without human intervention, worker's information is retrieved from Active Directory by running a PowerShell script.
 
