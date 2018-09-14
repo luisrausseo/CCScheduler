@@ -6,3 +6,30 @@ The application retrieves workers' schedule from a Google Calendar which feeds f
 ## Google Calendar API
 
 This application uses the [Google API Client Library for PHP](https://developers.google.com/api-client-library/php/) (google-api-php-client-2.2.2). 
+
+```PHP
+require_once 'google-api-php-client-2.2.2/vendor/autoload.php';
+
+putenv('GOOGLE_APPLICATION_CREDENTIALS=yourCalendarServiceAccount.json');
+$client = new Google_Client();
+$client->setScopes(Google_Service_Calendar::CALENDAR_READONLY);
+$client->useApplicationDefaultCredentials();
+$service = new Google_Service_Calendar($client);
+
+$calendarId = 'yourGoogleCalendarID@group.calendar.google.com';
+$optParams = array(
+	'maxResults' => 1000,
+	'orderBy' => 'startTime',
+	'singleEvents' => true,
+	'timeMin' => date('c', strtotime(date('c') . 'next day at midnight')),
+	);
+$results = $service->events->listEvents($calendarId, $optParams);
+
+if (empty($results->getItems())) {
+	print "No upcoming events found.\n";
+} else {
+	foreach ($results->getItems() as $event) {
+		//Do something with the $event->getSummary() which shows the title of the calendar event.
+	}
+}
+```
