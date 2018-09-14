@@ -1,4 +1,72 @@
 <!DOCTYPE html>
+<?php 
+	class AgentInfo {
+		public $username;
+		public $firstName;
+		public $lastName;
+		
+		function __construct($username, $firstName, $lastName) {
+			$this->username = $username;
+			$this->firstName = $firstName;
+			$this->lastName = $lastName;
+		}
+	}
+	
+	function getADGroupMember($input) {
+		$psPath = "powershell.exe";
+		$psScript = "C:\\xampp\\htdocs\\apps\\CSV\\get" . $input . ".ps1";
+		$runCMD = $psPath." -executionPolicy Unrestricted ".$psScript." 2>&1"; 
+		exec($runCMD, $out, $ret);
+		
+		//Delete headers
+		if ($input == "SA") {
+			for ($x = 0; $x < 4; $x++) {
+				array_shift($out);
+			}
+		} elseif ($input == "Techs") {
+			for ($x = 0; $x < 6; $x++) {
+				array_shift($out);
+			} 
+		} elseif ($input == "Sups") {
+			for ($x = 0; $x < 5; $x++) {
+				array_shift($out);
+			}
+		}
+		
+		//Clean array
+		foreach($out as $key => $value) {
+			$user = preg_split("/\s+/", $value)[0];
+			if (empty($value)){
+				array_splice($out, $key, 1);
+			}
+		}
+		
+		//Delete last value (not sure why is emtpty)
+		array_pop($out); 
+		return($out);
+	}
+	
+	function getAgentsInfo($input) {
+		$agents = [];
+		$ignore = str_getcsv(file("usersIgnored.txt")[0]);
+		foreach ($input as $item) {
+			$agent = new AgentInfo("","","");
+			$arr = preg_split ("/\s+/", $item);
+			if (in_array($arr[0], $ignore, true)) {
+				continue;
+			}
+			$agent->username = $arr[0];
+			$agent->firstName = $arr[1];
+			if (sizeof($arr) == 4) {
+				$agent->lastName = $arr[2];
+			} elseif (sizeof($arr) == 5) {
+				$agent->lastName = $arr[3];
+			}
+			$agents[] = $agent;
+		}
+		return $agents;
+	}
+?>
 <html class="ttu no-js" lang="en-us">
 	<head>
 		<title>Coaching Session Scheduler</title>
@@ -14,60 +82,24 @@
 						<option value="" selected disabled hidden>Choose an agent</option>
 						<option value="" disabled><strong>Student Analysts</strong></option>
 						<?php
-							$file = fopen("CSV/sa.csv", "r");
-							//Removes header and unwanted data
-							$agents_SA = fgetcsv($file, 1000, ",");
-							$agents_SA = fgetcsv($file, 1000, ",");
-							$agents_SA = fgetcsv($file, 1000, ",");
-							while (! feof($file)) {
-								$agents_SA = fgetcsv($file, 1000, ",");
-								if (! empty($agents_SA[0])){
-									if ($FnameSpace = strpos($agents_SA[1], " ")){
-										$agents_SA[1] = substr($agents_SA[1], 0, $FnameSpace);
-									}
-									echo "<option value=". $agents_SA[1] . "," . $agents_SA[2] . "|" . $agents_SA[0] . ">&nbsp&nbsp&nbsp-", $agents_SA[1] . " " . $agents_SA[2], "</option>";
-								}
+							$SAs = getAgentsInfo(getADGroupMember("SA"));
+							foreach ($SAs as $agent){
+								echo "<option value=". $agent->firstName . "," . $agent->lastName . "|" . $agent->username . ">&nbsp&nbsp&nbsp-", $agent->firstName . " " . $agent->lastName, "</option>";
 							}
-							fclose($file);
 						?>
 						<option value="" disabled>Technicians</option>
 						<?php
-							$file = fopen("CSV/techs.csv", "r");
-							//Removes header and unwanted data
-							$agents_techs = fgetcsv($file, 1000, ",");
-							$agents_techs = fgetcsv($file, 1000, ",");
-							$agents_techs = fgetcsv($file, 1000, ",");
-							$agents_techs = fgetcsv($file, 1000, ",");
-							$agents_techs = fgetcsv($file, 1000, ",");
-							while (! feof($file)) {
-								$agents_techs = fgetcsv($file, 1000, ",");
-								if ((! empty($agents_techs[0])) or (! empty($agents_techs[1]))){
-									if ($FnameSpace = strpos($agents_techs[1], " ")){
-										$agents_techs[1] = substr($agents_techs[1], 0, $FnameSpace);
-									}
-									echo "<option value=". $agents_techs[1] . "," . $agents_techs[2] . "|" . $agents_techs[0] . ">&nbsp&nbsp&nbsp-", $agents_techs[1] . " " . $agents_techs[2], "</option>";
-								}
+							$Techs = getAgentsInfo(getADGroupMember("Techs"));
+							foreach ($Techs as $agent){
+								echo "<option value=". $agent->firstName . "," . $agent->lastName . "|" . $agent->username . ">&nbsp&nbsp&nbsp-", $agent->firstName . " " . $agent->lastName, "</option>";
 							}
-							fclose($file);
 						?>
 						<option value="" disabled>Supervisors</option>
 						<?php
-							$file = fopen("CSV/sups.csv", "r");
-							//Removes header and unwanted data
-							$agents_sups = fgetcsv($file, 1000, ",");
-							$agents_sups = fgetcsv($file, 1000, ",");
-							$agents_sups = fgetcsv($file, 1000, ",");
-							$agents_sups = fgetcsv($file, 1000, ",");
-							while (! feof($file)) {
-								$agents_sups = fgetcsv($file, 1000, ",");
-								if (! empty($agents_sups[0])){
-									if ($FnameSpace = strpos($agents_sups[1], " ")){
-										$agents_sups[1] = substr($agents_sups[1], 0, $FnameSpace);
-									}
-									echo "<option value=". $agents_sups[1] . "," . $agents_sups[2] . "|" . $agents_sups[0] . ">&nbsp&nbsp&nbsp-", $agents_sups[1] . " " . $agents_sups[2], "</option>";
-								}
+							$Sups = getAgentsInfo(getADGroupMember("Sups"));
+							foreach ($Sups as $agent){
+								echo "<option value=". $agent->firstName . "," . $agent->lastName . "|" . $agent->username . ">&nbsp&nbsp&nbsp-", $agent->firstName . " " . $agent->lastName, "</option>";
 							}
-							fclose($file);
 						?>
 					</select>
 		
@@ -75,7 +107,9 @@
 			</div>
 			
 			<div id="OutlookBttn">
-				<button onclick="setupApptnmt()">Schedule Coaching Session</button><br>
+				<button id='nextBttn' onclick="reRoll()">Next agent's shift</button>
+				<button id='nextQual' onclick="nextQual()">Next quality shift</button><br><br>
+				<button id='apptBttn' onclick="setupApptnmt()">Schedule coaching session</button><br>
 			</div>
 		
 		<script>						
@@ -83,11 +117,18 @@
 				$('#OutlookBttn').hide();
 				$('#agentSelector').change(function(){
 					var inputValue = $(this).val();
-					$.post('getCalendar.php', { agentSelector: inputValue }, function(data){
+					$.post('getCalendar.php', { agentSelector: inputValue, stopValue: -1 }, function(data){
 						$('#output').empty();
 						$('#output').append(data);
 						if(!$('#OutlookBttn').is(':visible')) {
 							$('#OutlookBttn').toggle();
+						}
+						if(!$('#nextQual').is(':visible')) {
+							$('#nextQual').toggle();
+						}
+						$('#nextBttn').text("Next agent's shift");
+						if(!$('#apptBttn').is(':visible')) {
+							$(apptBttn).toggle();
 						}
 					});
 				});
@@ -100,10 +141,51 @@
 				var end_agent = $('#end_agent').text();
 				var start_coacher = $('#start_coacher').text();
 				var end_coacher = $('#end_coacher').text();
-				$.post('test.php', { agentSelector: user, coacherAgent: coacher, dates: [start_agent, end_agent, start_coacher, end_coacher] }, function(data){
+				$.post('sendAppointment.php', { agentSelector: user, coacherAgent: coacher, dates: [start_agent, end_agent, start_coacher, end_coacher] }, function(data){
 						$('#OutlookBttn').append(data);
+						$('#apptBttn').hide();
 				});
 			};
+			
+			function reRoll() {
+				var inputValue = $('#agentSelector').val();
+				var stopPoint = $('#stopPoint').text();
+				$.post('getCalendar.php', { agentSelector: inputValue, stopValue: stopPoint}, function(data){
+						$('#output').empty();
+						$('#output').append(data);
+						if($('#nextBttn').text() == "Next agent's shift") {
+							$('#nextBttn').text("Undo");
+							$('#nextQual').hide();
+						} else {	
+							$('#nextBttn').text("Next agent's shift");
+							if(!$('#nextQual').is(':visible')) {
+								$('#nextQual').toggle();
+							}
+						}
+						
+					});
+			};
+			
+			function nextQual() {
+				var inputValue = $('#agentSelector').val();
+				if ($('#nextQual').text() == "Next quality shift"){
+					var stopPoint = -2;
+				} else {
+					var stopPoint = -1;
+				}
+				$.post('getCalendar.php', { agentSelector: inputValue, stopValue: stopPoint}, function(data){
+						$('#output').empty();
+						$('#output').append(data);
+						if (stopPoint == -2) {
+							$('#nextQual').text("Undo");
+							$('#nextBttn').hide();
+						} else {
+							$('#nextQual').text("Next quality shift");
+							$('#nextBttn').toggle();
+						}
+					});
+			};
+			
 		</script>
 	</body>
 </html>
