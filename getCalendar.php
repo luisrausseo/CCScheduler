@@ -4,33 +4,7 @@
 	function NameFixer($var) {
 		$var = explode('|', $var)[0];
 		
-		if ($var == "James,Fields") {
-			$var = "Austin,Fields";
-		}
-		if ($var == "Kenji,Flores") {
-			$var = "Kenji,Nishizaki";
-		}
-		if ($var == "Maria,Ramey") {
-			$var = "Victoria,Rivas";
-		}
-		if ($var == "Nate,Ness") {
-			$var = "Nathaniel,Ness";
-		}
-		if ($var == "John,Koh") {
-			$var = "Byeong,Koh";
-		}
-		if ($var == "Alvin,Kim") {
-			$var = "YoungJin,Kim";
-		}
-		if ($var == "Naomi,Lopez") {
-			$var = "Priscilla,Lopez";
-		}
-		if ($var == "Naomi,Lopez") {
-			$var = "Priscilla,Lopez";
-		}
-		if ($var == "Taha,Taha") {
-			$var = "Taha Muhib,Taha";
-		}
+		//code omitted due privacy policies
 		
 		$FirstName = explode(',', $var)[0];
 		$LastName = explode(',', $var)[1];
@@ -41,13 +15,13 @@
 	function processDrpdown($selectedVal, $stopVal) {
 		require_once 'google-api-php-client-2.2.2/vendor/autoload.php';
 
-		putenv('GOOGLE_APPLICATION_CREDENTIALS=CalendarRetrieverWeb-e568bafabecc.json');
+		putenv('GOOGLE_APPLICATION_CREDENTIALS=GoogleServiceAccount.json');
 		$client = new Google_Client();
 		$client->setScopes(Google_Service_Calendar::CALENDAR_READONLY);
 		$client->useApplicationDefaultCredentials();
 		$service = new Google_Service_Calendar($client);
 
-		$calendarId = 'q7an5o5e6nef2udot5clf6i8ck@group.calendar.google.com';
+		$calendarId = 'yourGoogleCalendarID@group.calendar.google.com';
 		$optParams = array(
 		  'maxResults' => 1000,
 		  'orderBy' => 'startTime',

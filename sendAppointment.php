@@ -22,12 +22,7 @@
 		foreach($out as $line){
 			$arr = preg_split ("/\s+/", $line);
 			if (sizeof($arr) > 1){
-				if ($input == "Nathaniel Ness"){
-					$input = "Nate Ness";
-				}
-				if ($input == "Blakley McCurdy"){
-					$input = "Blake McCurdy";
-				}
+				//Code omitted due to privacy policies.
 				if (strpos($arr[1] . " " . $arr[2], $input) !== false) {
 					return $arr[3];
 				}
@@ -107,9 +102,9 @@
 	//Build ical event and sends email from within server
 	function sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $description, $location) {
 		$domain = 'ttu.edu';
-		$room_name = "IT Help Central Service Desk Coaching Room 101C";        
-		$room_address = "resourceascrm101c@ttu.edu"; 
-		$gmail_sender = "ithc.qtkm.qualitydev@gmail.com";
+		$room_name = "Room Name";        
+		$room_address = "room@domain.edu"; 
+		$gmail_sender = "sender@domain.edu";
 		$gmail_name = "ITHC Quality Session Scheduler";
 		
 
@@ -143,10 +138,10 @@
 		'METHOD:REQUEST' . "\r\n" .
 		'X-CALSTART:' .date("Ymd\THis", strtotime($startTime)). "Z\r\n" .
 		'X-CALEND:' .date("Ymd\THis", strtotime($endTime)). "Z\r\n" .
-		'X-WR-RELCALID:{00000185-EB2C-52FA-5EA7-50CBD5B4273E}' . "\r\n" . 
-		'X-WR-CALNAME:IT Help Central Service Desk Coaching Room 101C' . "\r\n" .
+		'X-WR-RELCALID:OMITTED' . "\r\n" . 
+		'X-WR-CALNAME:OMITTED' . "\r\n" .
 		'X-PRIMARY-CALENDAR:TRUE' . "\r\n" .
-		'X-OWNER;CN="IT Help Central Service Desk Coaching Room 101C":mailto:resourceascrm101c@ttu.edu' . "\r\n" .
+		'X-OWNER;CN="OMITTED":mailto:OMITTED' . "\r\n" .
 		'X-MS-OLK-WKHRSTART;TZID="Central Standard Time":073000' . "\r\n" .
 		'X-MS-OLK-WKHREND;TZID="Central Standard Time":160000' . "\r\n" .
 		'X-MS-OLK-WKHRDAYS:MO,TU,WE,TH,FR' . "\r\n" .
@@ -173,7 +168,7 @@
 		'CLASS:PUBLIC' . "\r\n" .
 		'CREATED:' .date("Ymd\THis"). "Z\r\n" .
 		'DESCRIPTION:'. $description . "\r\n" .
-		'ORGANIZER;CN="IT Help Central Quality":mailto:quality.ithelpcentral@ttu.edu'. "\r\n" .
+		'ORGANIZER;CN="OMITTED":mailto:OMITTED'. "\r\n" .
 		'LAST-MODIFIED:' . date("Ymd\TGis") . "\r\n" .
 		'UID:'. md5(uniqid(mt_rand(), true)) ."@".$domain."\r\n" .
 		'DTSTAMP:'.date("Ymd\TGis"). "\r\n" .
@@ -215,7 +210,7 @@
 		$endTime = $coach_time[1];    
 		$subject = "Coaching Session with " . $coacher_name . " and " . $agent_name;
 		$description = "Please come to ASC Room 101C for a coaching session for a Quality Evaluation. If you are on a call during the time of coaching session, please come after your call ends.";        
-		$location = "IT Help Central Service Desk Coaching Room 101C";
+		$location = "OMITTED";
 		//Debug
 		echo $agent_address . " | " . $agent_name . " <br> " . $coacher_address . " | " . $coacher_name . "<br>";
 		echo $subject . "<br>";
