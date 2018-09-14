@@ -78,3 +78,26 @@ if (max($start_1, $start_2) < min($end_1, $end_2)) {
 ```
 
 ![picture alt](/img/MatchAlgorithm.PNG "Time Match Algorithm")
+
+# Microsoft PowerShell
+
+To keep the application updated without human intervention, worker's information is retrieved from Active Directory by running a PowerShell script.
+
+To retrieve an individual's email, the following function is used:
+
+```PHP
+function getUserEmail($input){
+	$psPath = "powershell.exe";
+	$psScript = "(Get-ADUser ". $input ." -Properties mail).mail";
+	$runCMD = $psPath." -executionPolicy Unrestricted ".$psScript." 2>&1"; 
+	exec($runCMD, $out, $ret);
+	return $out[0];
+}
+```
+
+To get information of certain groups, the $psScript variable is changed to run the following command:
+
+```PowerShell
+Import-Module ActiveDirectory
+Get-ADGroupMember AD_GROUP | Select Name, @{Name="FirstName";Expression={(Get-ADUser $_.distinguishedName -Properties EmailAddress).GivenName}},@{Name="Last Name";Expression={(Get-ADUser $_.distinguishedName -Properties EmailAddress).Surname}}, @{Name="Email";Expression={(Get-ADUser $_.distinguishedName -Properties mail).mail}} | Sort Email
+```
