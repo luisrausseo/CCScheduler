@@ -50,12 +50,9 @@
 		$calendar = file($cal_file[0])
 					or die("Calendar unavailable!");
 		
-		//Calculate time range for coaching session_cache_expire
+		//Calculate time range for coaching session
 		$date_min = max($start_agent, $start_coacher);
 		$date_max = min($end_agent, $end_coacher);
-		
-		//Add 30 minutes to date_min to account for late shifts
-		//$date_min = date('c', strtotime($date_min . '+ 30 minute'));
 		
 		//Get current date of appointment
 		$date_coach = $start_agent;

@@ -39,3 +39,40 @@ For this to work, a Service Account must be created at [Google Cloud Console](ht
 Additionally the calendar must be shared to the Google Service Account. 
 
 ![picture alt](/img/GoogleCalendarSharing.PNG "Google Calendar Sharing Setting")
+
+## Office 365 Room Calendar
+
+The room calendar is retrieved by opening a share-link provided and parsing trough the .ics file. 
+
+```PHP
+//Get calendar from Outlook
+$cal_file = file("calendar.txt"); //This file contains the link of the .ics file.
+$calendar = file($cal_file[0])
+			or die("Calendar unavailable!");
+			
+//Create empty array for room's busy times
+		$room_busy = []; 
+		
+//Find if room is busy
+foreach ($calendar as $line_num => $line) {
+	if (strpos($line, "SUMMARY") !== false) {
+		$line_date = date("m-d-Y", strtotime(substr($calendar[$line_num + 1], strpos($calendar[$line_num + 1], ":") + 1)));
+		if (date("m-d-Y", strtotime($date_coach)) == $line_date) {
+			$room_busy[] = date("c", strtotime(substr($calendar[$line_num + 1], strpos($calendar[$line_num + 1], ":") + 1)));
+			$room_busy[] = date("c", strtotime(substr($calendar[$line_num + 2], strpos($calendar[$line_num + 2], ":") + 1)));
+		} 
+	}
+}
+```
+
+## Matching Algorithm
+
+To match and worker to a Quality agent, or to find a time in which the room is available for both agents, the following criteria was used to define overlapping time frames:
+
+```PHP
+if (max($start_1, $start_2) < min($end_1, $end_2)) {
+	//Time frames overlap
+} else {
+	//Do not overlap
+}
+```
