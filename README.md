@@ -38,7 +38,7 @@ For this to work, a Service Account must be created at [Google Cloud Console](ht
 
 Additionally the calendar must be shared to the Google Service Account. 
 
-![picture alt](/img/GoogleCalendarSharing.PNG "Google Calendar Sharing Setting")
+![picture alt](/img/GoogleCalendarSharing.PNG "Google Calendar Sharing Settings")
 
 ## Office 365 Room Calendar
 
@@ -76,3 +76,5 @@ if (max($start_1, $start_2) < min($end_1, $end_2)) {
 	//Do not overlap
 }
 ```
+
+![picture alt](/img/MatchingAlgorithm.PNG "Time Match Algorithm")
