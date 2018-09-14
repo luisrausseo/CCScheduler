@@ -33,3 +33,9 @@ if (empty($results->getItems())) {
 	}
 }
 ```
+
+For this to work, a Service Account must be created at [Google Cloud Console](https://console.cloud.google.com) and add the JSON file in the same path of the php file. 
+
+Additionally the calendar must be shared to the Google Service Account. 
+
+![picture alt](/img/GoogleCalendarSharing.PNG "Google Calendar Sharing Setting")
